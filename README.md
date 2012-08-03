@@ -16,7 +16,7 @@ http://www.contao.org/en/extension-list/view/BirthdayMailer.html
 Tracker
 -------
 
-http://contao-forge.org/projects/birthdaymailer/issues
+https://github.com/cliffparnitzky/BirthdayMailer/issues
 
 
 Inserttags

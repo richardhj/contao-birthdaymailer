@@ -10,7 +10,7 @@ Installation
 The extension can be installed using the Contao extension manager in the Contao
 back end. If you prefer to install it manually, download the files here:
 
-http://www.contao.org/de/extension-list/view/BirthdayMailer.html
+http://www.contao.org/en/extension-list/view/BirthdayMailer.html
 
 
 Tracker

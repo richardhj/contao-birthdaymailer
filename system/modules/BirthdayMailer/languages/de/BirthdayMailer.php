@@ -32,8 +32,8 @@
  * BirthdayMailer defaults
  */
 $GLOBALS['TL_LANG']['BirthdayMailer']['mail']['default']['salutation']        = 'Sehr geehrte/-r';
-$GLOBALS['TL_LANG']['BirthdayMailer']['mail']['default']['salutation_male']   = 'Sehr geehrter Herr';
 $GLOBALS['TL_LANG']['BirthdayMailer']['mail']['default']['salutation_female'] = 'Sehr geehrte Frau';
+$GLOBALS['TL_LANG']['BirthdayMailer']['mail']['default']['salutation_male']   = 'Sehr geehrter Herr';
 $GLOBALS['TL_LANG']['BirthdayMailer']['mail']['default']['subject']           = 'Herzliche Glückwünsche zum Geburtstag';
 $GLOBALS['TL_LANG']['BirthdayMailer']['mail']['default']['text'] = '
 {{birthdaychild::salutation}} {{birthdaychild::name}},

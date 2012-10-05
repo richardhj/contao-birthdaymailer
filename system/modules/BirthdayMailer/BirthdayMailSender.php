@@ -227,7 +227,7 @@ class BirthdayMailSender extends Backend
 		if ($GLOBALS['TL_CONFIG']['birthdayMailerDeveloperMode'] || $GLOBALS['TL_CONFIG']['birthdayMailerLogDebugInfo'])
 		{
 			$mailTextUsageOutput = self::$currentConfig->mailUseCustomText ? 'yes' : 'no';
-			$this->log('BirthdayMailer: These are additional debugging information that will only be logged in developer mode.'
+			$this->log('BirthdayMailer: These are additional debugging information that will only be logged in developer mode or if debugging is enabled.'
 									 . ' | Userlanguage = ' . self::$currentConfig->language
 								   . ' | used language = ' . self::$currentLanguage
 								   . ' | mailTextUsage = ' . $mailTextUsageOutput

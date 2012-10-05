@@ -31,9 +31,9 @@
 /**
  * BirthdayMailer defaults
  */
-$GLOBALS['TL_LANG']['BirthdayMailer']['mail']['default']['salutation']        = 'Dear';
-$GLOBALS['TL_LANG']['BirthdayMailer']['mail']['default']['salutation_male']   = 'Dear Mr.';
-$GLOBALS['TL_LANG']['BirthdayMailer']['mail']['default']['salutation_female'] = 'Dear Mrs.'; 
+$GLOBALS['TL_LANG']['BirthdayMailer']['mail']['default']['salutation']        = 'Dear Ms/Mr';
+$GLOBALS['TL_LANG']['BirthdayMailer']['mail']['default']['salutation_female'] = 'Dear Ms'; 
+$GLOBALS['TL_LANG']['BirthdayMailer']['mail']['default']['salutation_male']   = 'Dear Mr';
 $GLOBALS['TL_LANG']['BirthdayMailer']['mail']['default']['subject']           = 'Happy Birthday';
 $GLOBALS['TL_LANG']['BirthdayMailer']['mail']['default']['text'] = '
 {{birthdaychild::salutation}} {{birthdaychild::name}},

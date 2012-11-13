@@ -26,6 +26,12 @@ Compatibility
 - max. version: Contao 2.10.4
 
 
+Dependency
+----------
+
+- This extension is dependent on the following extensions: [[associategroups]](http://contao.org/de/extension-list/view/associategroups.de.html), [[ExtendedEmailRegex]](http://contao.org/de/extension-list/view/ExtendedEmailRegex.de.html)
+
+
 Inserttags
 ----------
 

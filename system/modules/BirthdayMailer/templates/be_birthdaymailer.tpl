@@ -21,7 +21,7 @@
 			<div><?php echo $this->failureHeadline; ?></div>
 		</td>
 	</tr>
-</head>
+</thead>
 <tbody>
 <?php foreach ($this->failureArray as $failure): ?>
   <tr onmouseout="Theme.hoverRow(this, 0);" onmouseover="Theme.hoverRow(this, 1);">

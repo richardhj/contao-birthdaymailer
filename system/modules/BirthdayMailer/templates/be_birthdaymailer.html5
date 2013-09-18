@@ -14,34 +14,27 @@
 </div>
 
 <?php if ($this->failed): ?>
-<table summary="Failure overview">
-<thead>
-	<tr>
-		<td colspan="4" class="headline">
-			<div><?php echo $this->failureHeadline; ?></div>
-		</td>
-	</tr>
-</thead>
-<tbody>
-<?php foreach ($this->failureArray as $failure): ?>
-  <tr onmouseout="Theme.hoverRow(this, 0);" onmouseover="Theme.hoverRow(this, 1);">
-    <td class="col_1">ID <?php echo $failure['id']; ?></td>
-    <td class="col_1"><?php echo $failure['firstname']; ?></td>
-    <td class="col_1"><?php echo $failure['lastname']; ?></td>
-    <td class="col_1"><?php echo $failure['email']; ?></td>
-  </tr>
-<?php endforeach; ?>
-</tbody>
-</table>
-
-<div id="tl_moverview">
-  <p class="tl_update"><?php echo $this->failureMessage; ?></p>
+<div id="tl_messages">
+  <h2><?php echo $this->failureHeadline; ?></h2>
+  <table summary="Failure overview">
+  <tbody>
+  <?php foreach ($this->failureArray as $failure): ?>
+    <tr onmouseout="Theme.hoverRow(this, 0);" onmouseover="Theme.hoverRow(this, 1);">
+  	<td class="col_1">ID <?php echo $failure['id']; ?></td>
+  	<td class="col_1"><?php echo $failure['firstname']; ?></td>
+  	<td class="col_1"><?php echo $failure['lastname']; ?></td>
+  	<td class="col_1"><?php echo $failure['email']; ?></td>
+    </tr>
+  <?php endforeach; ?>
+  </tbody>
+	</table>
+  <p class="tl_info"><?php echo $this->failureMessage; ?></p>
 </div>
 <?php endif; ?>
 
 <?php if ($this->developerMessage): ?>
-<div id="tl_moverview">
-  <p class="tl_update"><?php echo $this->developerMessage; ?></p>
+<div id="tl_messages">
+  <p class="tl_info"><?php echo $this->developerMessage; ?></p>
 </div>
 <?php endif; ?>
 

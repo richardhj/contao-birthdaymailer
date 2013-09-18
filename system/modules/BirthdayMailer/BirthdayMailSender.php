@@ -273,7 +273,7 @@ class BirthdayMailSender extends Backend
 					$objEmail->sendBcc($emailBCC);
 				}
 				
-				$emailTo = self::$currentConfig->email;			
+				$emailTo = self::$currentConfig->email;
 			}
 			return $objEmail->sendTo($emailTo);
 		}

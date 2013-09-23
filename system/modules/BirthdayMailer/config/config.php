@@ -44,15 +44,6 @@ $GLOBALS['BE_MOD']['accounts']['BirthdayMailer'] = array
 
 /**
  * -------------------------------------------------------------------------
- * HOOKS
- * -------------------------------------------------------------------------
- */
-
- // Add hook for replacing the insert tags with values
-$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('BirthdayMailInsertTag', 'replaceBirthdayMailInsertTags'); 
-
-/**
- * -------------------------------------------------------------------------
  * CRON
  * -------------------------------------------------------------------------
  */

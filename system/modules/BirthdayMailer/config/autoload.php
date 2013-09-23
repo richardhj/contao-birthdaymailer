@@ -16,8 +16,7 @@
  */
 ClassLoader::addClasses(array
 (
-	'BirthdayMailInsertTag' => 'system/modules/BirthdayMailer/BirthdayMailInsertTag.php',
-	'BirthdayMailSender'    => 'system/modules/BirthdayMailer/BirthdayMailSender.php',
+	'BirthdayMailSender' => 'system/modules/BirthdayMailer/BirthdayMailSender.php',
 ));
 
 

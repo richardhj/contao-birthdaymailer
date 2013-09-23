@@ -39,38 +39,11 @@
 class BirthdayMailSender extends Backend
 {
 	// the default language will always be englisch
-	private static $defaultLanguage = 'en';
+	private $defaultLanguage = 'en';
 
-	private static $currentConfig;
-	private static $currentLanguage;
-	
 	public function __construct()
 	{
 		parent::__construct();
-	}
-	
-	/**
-	 * Returns the actual config
-	 */
-	public static function getCurrentConfig()
-	{
-		return self::$currentConfig;
-	}	
-
-	/**
-	 * Returns the actual language
-	 */
-	public static function getCurrentLanguage()
-	{
-		return self::$currentLanguage;
-	}
-
-	/**
-	 * Returns the default language
-	 */
-	public static function getDefaultLanguage()
-	{
-		return self::$defaultLanguage;
 	}
 	
 	/**
@@ -148,12 +121,11 @@ class BirthdayMailSender extends Backend
 		
 		while($config->next())
 		{
-			self::$currentConfig = $config;
 			if((($GLOBALS['TL_CONFIG']['birthdayMailerDeveloperMode'] && $GLOBALS['TL_CONFIG']['birthdayMailerDeveloperModeIgnoreDate'])
 				|| (is_numeric($config->dateOfBirth) && date("d.m") == date("d.m", $config->dateOfBirth)))
-				&& ($this->isMemberActive() && $this->isMemberGroupActive() && $this->allowSendingDuplicates($alreadySendTo)))
+				&& ($this->isMemberActive($config) && $this->isMemberGroupActive($config) && $this->allowSendingDuplicates($alreadySendTo, $config)))
 			{
-				if ($this->sendMail())
+				if ($this->sendMail($config))
 				{
 					$alreadySendTo[] =  $config->id;
 				}
@@ -177,17 +149,17 @@ class BirthdayMailSender extends Backend
 	 *		3. if nothing found, get default text in specified language
 	 *		4. if nothing found, get default text in language 'en'
 	 */
-	private function getEmailText ($textType)
+	private function getEmailText ($textType, $config, $language)
 	{
 		$text = "";
 
-		if (self::$currentConfig->mailUseCustomText)
+		if ($config->mailUseCustomText)
 		{
-			$text = $GLOBALS['TL_LANG']['BirthdayMailer']['mail'][self::$currentConfig->mailTextKey][$textType][self::$currentLanguage];
+			$text = $GLOBALS['TL_LANG']['BirthdayMailer']['mail'][$config->mailTextKey][$textType][$language];
 			
-			if (strlen($text) == 0 && self::$currentLanguage != $defaultLanguage)
+			if (strlen($text) == 0 && $language != $defaultLanguage)
 			{
-				$text = $GLOBALS['TL_LANG']['BirthdayMailer']['mail'][self::$currentConfig->mailTextKey][$textType][$defaultLanguage];
+				$text = $GLOBALS['TL_LANG']['BirthdayMailer']['mail'][$config->mailTextKey][$textType][$defaultLanguage];
 			}
 		}
 
@@ -196,7 +168,7 @@ class BirthdayMailSender extends Backend
 			$text = $GLOBALS['TL_LANG']['BirthdayMailer']['mail']['default'][$textType];
 		}
 
-		$textReplaced = $this->replaceInsertTags($text);
+		$textReplaced = $this->replaceBirthdayMailerInsertTags($text, $config, $language);
 		
 		if ($textReplaced)
 		{
@@ -210,29 +182,29 @@ class BirthdayMailSender extends Backend
 	 * Send an email.
 	 * @return boolean
 	 */
-	private function sendMail()
+	private function sendMail($config)
 	{
-		self::$currentLanguage = self::$currentConfig->language;
-		if (strlen(self::$currentLanguage) == 0)
+		$language = $config->language;
+		if (strlen($language) == 0)
 		{
-			self::$currentLanguage = self::$defaultLanguage;
+			$language = $defaultLanguage;
 		}
 		
-		$this->loadLanguageFile('BirthdayMailer', self::$currentLanguage);
+		$this->loadLanguageFile('BirthdayMailer', $language);
 		
-		$emailSubject = self::getEmailText('subject');
-		$emailText = self::getEmailText('text');
-		$emailHtml = self::getEmailText('html');
+		$emailSubject = $this->getEmailText('subject', $config, $language);
+		$emailText = $this->getEmailText('text', $config, $language);
+		$emailHtml = $this->getEmailText('html', $config, $language);
 	
 		if ($GLOBALS['TL_CONFIG']['birthdayMailerDeveloperMode'] || $GLOBALS['TL_CONFIG']['birthdayMailerLogDebugInfo'])
 		{
-			$mailTextUsageOutput = self::$currentConfig->mailUseCustomText ? 'yes' : 'no';
+			$mailTextUsageOutput = $config->mailUseCustomText ? 'yes' : 'no';
 			$this->log('BirthdayMailer: These are additional debugging information that will only be logged in developer mode or if debugging is enabled.'
-									 . ' | Userlanguage = ' . self::$currentConfig->language
-								   . ' | used language = ' . self::$currentLanguage
+									 . ' | Userlanguage = ' . $config->language
+								   . ' | used language = ' . $language
 								   . ' | mailTextUsage = ' . $mailTextUsageOutput
-								   . ' | mailTextKey = ' . self::$currentConfig->mailTextKey
-								   . ' | email = ' . self::$currentConfig->email
+								   . ' | mailTextKey = ' . $config->mailTextKey
+								   . ' | email = ' . $config->email
 								   . ' | subject = ' . $emailSubject
 								   . ' | text = ' . $emailText
 								   . ' | html = ' . $emailHtml, 'BirthdayMailSender sendMail()', TL_CRON);
@@ -242,10 +214,10 @@ class BirthdayMailSender extends Backend
 
 		$objEmail->logFile = 'birthdaymails.log';
 		
-		$objEmail->from = self::$currentConfig->mailSender;
-		if (strlen(self::$currentConfig->mailSenderName) > 0)
+		$objEmail->from = $config->mailSender;
+		if (strlen($config->mailSenderName) > 0)
 		{
-			$objEmail->fromName = self::$currentConfig->mailSenderName;
+			$objEmail->fromName = $config->mailSenderName;
 		}
 		$objEmail->subject = $emailSubject;
 		$objEmail->text = $emailText;
@@ -253,7 +225,7 @@ class BirthdayMailSender extends Backend
 		
 		try
 		{
-			$emailTo = self::$currentConfig->email;
+			$emailTo = $config->email;
 			
 			if ($GLOBALS['TL_CONFIG']['birthdayMailerDeveloperMode'])
 			{
@@ -261,19 +233,19 @@ class BirthdayMailSender extends Backend
 			}
 			else
 			{
-				if (strlen(self::$currentConfig->mailCopy) > 0)
+				if (strlen($config->mailCopy) > 0)
 				{
-					$emailCC = ExtendedEmailRegex::getEmailsFromList(self::$currentConfig->mailCopy);
+					$emailCC = ExtendedEmailRegex::getEmailsFromList($config->mailCopy);
 					$objEmail->sendCc($emailCC);
 				}
 				
-				if (strlen(self::$currentConfig->mailBlindCopy) > 0)
+				if (strlen($config->mailBlindCopy) > 0)
 				{
-					$emailBCC = ExtendedEmailRegex::getEmailsFromList(self::$currentConfig->mailBlindCopy);
+					$emailBCC = ExtendedEmailRegex::getEmailsFromList($config->mailBlindCopy);
 					$objEmail->sendBcc($emailBCC);
 				}
 				
-				$emailTo = self::$currentConfig->email;
+				$emailTo = $config->email;
 			}
 			return $objEmail->sendTo($emailTo);
 		}
@@ -287,13 +259,13 @@ class BirthdayMailSender extends Backend
 	 * Checks if the member is active.
 	 * @return boolean
 	 */
-	private function isMemberActive()
+	private function isMemberActive($config)
 	{
-		if (self::$currentConfig->disable ||
-			(strlen(self::$currentConfig->start) > 0 &&
-			self::$currentConfig->start > time()) ||
-			(strlen(self::$currentConfig->stop) > 0 &&
-			self::$currentConfig->stop < time()))
+		if ($config->disable ||
+			(strlen($config->start) > 0 &&
+			$config->start > time()) ||
+			(strlen($config->stop) > 0 &&
+			$config->stop < time()))
 		{
 			return false;
 		}
@@ -304,13 +276,13 @@ class BirthdayMailSender extends Backend
 	 * Checks if the associated group is active.
 	 * @return boolean
 	 */
-	private function isMemberGroupActive()
+	private function isMemberGroupActive($config)
 	{
-		if (self::$currentConfig->memberGroupDisable ||
-			(strlen(self::$currentConfig->memberGroupStart) > 0 &&
-			self::$currentConfig->memberGroupStart > time()) ||
-			(strlen(self::$currentConfig->memberGroupStop) > 0 &&
-			self::$currentConfig->memberGroupStop < time()))
+		if ($config->memberGroupDisable ||
+			(strlen($config->memberGroupStart) > 0 &&
+			$config->memberGroupStart > time()) ||
+			(strlen($config->memberGroupStop) > 0 &&
+			$config->memberGroupStop < time()))
 		{
 			return false;
 		}
@@ -321,9 +293,9 @@ class BirthdayMailSender extends Backend
 	 * Checks if sending duplicate emails is allowed.
 	 * @return boolean
 	 */
-	private function allowSendingDuplicates($alreadySendTo)
+	private function allowSendingDuplicates($alreadySendTo, $config)
 	{
-		if (!$GLOBALS['TL_CONFIG']['birthdayMailerAllowDuplicates'] && in_array(self::$currentConfig->id, $alreadySendTo))
+		if (!$GLOBALS['TL_CONFIG']['birthdayMailerAllowDuplicates'] && in_array($config->id, $alreadySendTo))
 		{
 			return false;
 		}
@@ -337,6 +309,101 @@ class BirthdayMailSender extends Backend
 	{
 		$this->Database->prepare("DELETE FROM tl_birthdaymailer WHERE memberGroup = ?")
 						 ->execute($dc->id);
+	}
+	
+	/**
+	 * Replaces all insert tags for the email text.
+	 */
+	private function replaceBirthdayMailerInsertTags ($text, $config, $language)
+	{
+		$textArray = preg_split('/\{\{([^\}]+)\}\}/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+		
+		for ($count = 0; $count < count($textArray); $count++)
+		{
+			$parts = explode("::", $textArray[$count]);
+			switch ($parts[0])
+			{
+				case 'birthdaychild':
+					switch ($parts[1])
+					{
+						case 'salutation':
+							$salutation = $this->getSalutation($config, $language, $defaultLanguage, 'salutation_' . $config->gender);
+							if (strlen($salutation) == 0)
+							{
+								$salutation = $this->getSalutation($config, $language, $defaultLanguage, 'salutation');
+							}
+							$textArray[$count] = $salutation;
+							break;
+							
+						case 'name':
+							$textArray[$count] = trim($config->firstname . ' ' . $config->lastname);
+							break;
+							
+						case 'groupname':
+							$textArray[$count] = trim($config->memberGroupName);
+							break;
+							
+						case 'password':
+							// do not allow extracting the password
+							$textArray[$count] = "";
+							break;
+							
+						case 'age':
+							$textArray[$count] = (date("Y") - date("Y", $config->dateOfBirth));
+							break;
+							
+						default:
+							$textArray[$count] = $config->$parts[1];
+							break;
+					}
+					break;
+					
+				case 'birthdaymailer':
+					switch ($parts[1])
+					{
+						case 'email':
+							$textArray[$count] = trim($config->mailSender);
+							break;
+							
+						case 'name':
+							$textArray[$count] = trim($config->mailSenderName);
+							break;
+					}
+					break;
+			}
+		}
+		
+		return implode('', $textArray);
+	}
+	
+	/**
+	 * Get the text for specific types. Fallback ist to 'default' if no text is set.
+	 * FALLBACK Chain:
+	 * 		1. check, if there is a text for the specified textKey and language (search in system/config/langconfig.php)
+	 *		2. if nothing found, check, if there is a text for the specified textKey and 'en' (search in system/config/langconfig.php)
+	 *		3. if nothing found, get default text in specified language
+	 *		4. if nothing found, get default text in language 'en'
+	 */
+	private function getSalutation($config, $language, $defaultLanguage, $textType)
+	{
+		$text = "";
+
+		if ($config->mailUseCustomText)
+		{
+			$text = $GLOBALS['TL_LANG']['BirthdayMailer']['mail'][$config->mailTextKey][$textType][$language];
+			
+			if (strlen($text) == 0 && $language != $defaultLanguage)
+			{
+				$text = $GLOBALS['TL_LANG']['BirthdayMailer']['mail'][$config->mailTextKey][$textType][$defaultLanguage];
+			}
+		}
+
+		if (strlen($text) == 0)
+		{
+			$text = $GLOBALS['TL_LANG']['BirthdayMailer']['mail']['default'][$textType];
+		}
+
+		return $text;
 	}
 }
 

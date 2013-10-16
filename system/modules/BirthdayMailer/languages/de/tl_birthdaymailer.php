@@ -59,12 +59,15 @@ $GLOBALS['TL_LANG']['tl_birthdaymailer']['delete']           = array('Konfigurat
 /**
  * Manual execution messages
  */
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['headline']         = "Manuelle Ausführung";
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['sendingHeadline']  = "Systemnachrichten";
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['success']          = "%s E-Mails wurden erfolgreich versendet";
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['failed']           = "%s E-Mails konnten nicht gesendet werden";
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['failureHeadline']  = "Fehler";
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['failureMessage']   = "Bitte prüfen Sie das Contao <b>System-Log</b> oder die Log-Dateien (<i>birthdaymails.log</i>, <i>error.log</i>) um weitere Informationen zu den Fehlern zu erhalten.";
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['developerMessage'] = "Sie befinden sich im Entwicklermodus. Alle E-Mails werden an die folgende Entwickler E-Mail-Adresse gesendet: <i>%s</i>. Bitte stellen Sie sicher, dass dies eine gültige E-Mail-Adresse ist. Änderungen können in den <b>Einstellungen</b> vorgenommen werden.";
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['headline']          = "Manuelle Ausführung";
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['sendingHeadline']   = "Systemnachrichten";
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['successMessage']    = "%s E-Mails wurden erfolgreich versendet.";
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['failureMessage']    = "%s E-Mails konnten wegen Fehler nicht gesendet werden.";
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['failureTableHead']  = "Fehler";
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['failureInfo']       = "Bitte prüfen Sie das Contao <b>System-Log</b> oder die Log-Dateien (<i>birthdaymails.log</i>, <i>error.log</i>) um weitere Informationen zu den Fehlern zu erhalten.";
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['abortionMessage']   = "%s E-Mails konnten wegen Abbrüchen (durch Hooks) nicht gesendet werden.";
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['abortionTableHead'] = "Abbrüche";
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['abortionInfo']      = "Bitte prüfen Sie das Contao <b>System-Log</b> um weitere Informationen zu den Abbrüchen zu erhalten.";
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['developerMessage']  = "Sie befinden sich im Entwicklermodus. Alle E-Mails werden an die folgende Entwickler E-Mail-Adresse gesendet: <i>%s</i>. Bitte stellen Sie sicher, dass dies eine gültige E-Mail-Adresse ist. Änderungen können in den <b>Einstellungen</b> vorgenommen werden.";
 
 ?>

@@ -59,12 +59,15 @@ $GLOBALS['TL_LANG']['tl_birthdaymailer']['delete']           = array('Delete con
 /**
  * Manual execution messages
  */
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['headline']         = "Manual execution";
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['sendingHeadline']  = "System messages";
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['success']          = "%s emails were sent successfully";
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['failed']           = "%s emails could not be sent";
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['failureHeadline']  = "Errors";
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['failureMessage']   = "Please check the Contao <b>System log</b> or the log files (<i>birthdaymails.log</i>, <i>error.log</i>) to get additional information about the errors.";
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['developerMessage'] = "You are in developermode. All emails will be send to the folowing developer email address: <i>%s</i>. Please make sure that this is a valid email address. Changes can be made in the <b>Settings</b>.";
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['headline']          = "Manual execution";
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['sendingHeadline']   = "System messages";
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['successMessage']    = "%s emails were sent successfully.";
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['failureMessage']    = "%s emails could not be sent due to errors.";
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['failureTableHead']  = "Errors";
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['failureInfo']       = "Please check the Contao <b>System log</b> or the log files (<i>birthdaymails.log</i>, <i>error.log</i>) to get additional information about the errors.";
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['abortionMessage']   = "%s emails could not be sent due to abortions.";
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['abortionTableHead'] = "Abortions";
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['abortionInfo']      = "Please check the Contao <b>System log</b> to get additional information about the abortions.";
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['developerMessage']  = "You are in developermode. All emails will be send to the folowing developer email address: <i>%s</i>. Please make sure that this is a valid email address. Changes can be made in the <b>Settings</b>.";
 
 ?>

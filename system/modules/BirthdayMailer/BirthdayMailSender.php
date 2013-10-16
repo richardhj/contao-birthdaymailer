@@ -39,7 +39,7 @@
 class BirthdayMailSender extends Backend
 {
 	// the default language will always be englisch
-	private $defaultLanguage = 'en';
+	const DEFAULT_LANGUAGE = 'en';
 
 	public function __construct()
 	{
@@ -52,7 +52,7 @@ class BirthdayMailSender extends Backend
 	public function sendBirthdayMailManually()
 	{
 		if (TL_MODE == 'BE')
-		{ 
+		{
 			$result = $this->sendBirthdayMail();
 			
 			// Create template object
@@ -61,14 +61,20 @@ class BirthdayMailSender extends Backend
 			$objTemplate->backLink = '<a href="'.ampersand(str_replace('&key=sendBirthdayMail', '', $this->Environment->request)).'" class="header_back" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['backBT']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>';
 			$objTemplate->headline = $GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['headline'];
 			$objTemplate->sendingHeadline = $GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['sendingHeadline'];
-			$objTemplate->success = sprintf($GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['success'], $result['success']);
-			if (sizeof($result['failed']) > 0)
-			{
-				$objTemplate->failed = sprintf($GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['failed'], sizeof($result['failed']));
-			}
-			$objTemplate->failureHeadline = $GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['failureHeadline'];
-			$objTemplate->failureArray = $result['failed'];		
-			$objTemplate->failureMessage = $GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['failureMessage'];		
+			$objTemplate->success = sprintf($GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['successMessage'], $result['success']);
+			
+			$objTemplate->failed = sizeof($result['failed']) > 0;
+			$objTemplate->failureMessage = sprintf($GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['failureMessage'], sizeof($result['failed']));
+			$objTemplate->failureTableHead = $GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['failureTableHead'];
+			$objTemplate->failures = $result['failed'];
+			$objTemplate->failureInfo = $GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['failureInfo'];
+			
+			$objTemplate->aborted = sizeof($result['aborted']) > 0;
+			$objTemplate->abortionMessage = sprintf($GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['abortionMessage'], sizeof($result['aborted']));
+			$objTemplate->abortionTableHead = $GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['abortionTableHead'];
+			$objTemplate->abortions = $result['aborted'];
+			$objTemplate->abortionInfo = $GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['abortionInfo'];
+			
 			if ($GLOBALS['TL_CONFIG']['birthdayMailerDeveloperMode'])
 			{
 				$objTemplate->developerMessage = sprintf($GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['developerMessage'], $GLOBALS['TL_CONFIG']['birthdayMailerDeveloperModeEmail']);
@@ -101,7 +107,8 @@ class BirthdayMailSender extends Backend
 		$this->import('ExtendedEmailRegex', 'Base');
 		
 		$alreadySendTo = array();
-		$notSendCauseOfErrors = array();
+		$notSendCauseOfError = array();
+		$notSendCauseOfAbortion = array();
 		
 		$config = $this->Database->prepare("SELECT tl_member.*, "
 												. "tl_member_group.name as memberGroupName, tl_member_group.disable as memberGroupDisable, tl_member_group.start as memberGroupStart, tl_member_group.stop as memberGroupStop, "
@@ -121,24 +128,64 @@ class BirthdayMailSender extends Backend
 		
 		while($config->next())
 		{
-			if((($GLOBALS['TL_CONFIG']['birthdayMailerDeveloperMode'] && $GLOBALS['TL_CONFIG']['birthdayMailerDeveloperModeIgnoreDate'])
-				|| (is_numeric($config->dateOfBirth) && date("d.m") == date("d.m", $config->dateOfBirth)))
-				&& ($this->isMemberActive($config) && $this->isMemberGroupActive($config) && $this->allowSendingDuplicates($alreadySendTo, $config)))
+			if(
+					is_numeric($config->dateOfBirth)
+					&&
+					(
+						(
+							$GLOBALS['TL_CONFIG']['birthdayMailerDeveloperMode']
+							&&
+							$GLOBALS['TL_CONFIG']['birthdayMailerDeveloperModeIgnoreDate']
+						)
+						||
+						(
+							date("d.m") == date("d.m", $config->dateOfBirth)
+						)
+					)
+					&&
+					(
+						$this->isMemberActive($config)
+						&&
+						$this->isMemberGroupActive($config)
+						&&
+						$this->allowSendingDuplicates($alreadySendTo, $config)
+					)
+				)
 			{
-				if ($this->sendMail($config))
+				// now check via custom hook, if sending should be aborted
+				$blnAbortSendMail = false;
+				if (isset($GLOBALS['TL_HOOKS']['birthdayMailerAbortSendMail']) && is_array($GLOBALS['TL_HOOKS']['birthdayMailerAbortSendMail']))
 				{
-					$alreadySendTo[] =  $config->id;
+					foreach ($GLOBALS['TL_HOOKS']['birthdayMailerAbortSendMail'] as $callback)
+					{
+						$this->import($callback[0]);
+						$blnAbortSendMail = $this->$callback[0]->$callback[1]($config, $blnAbortSendMail);
+					}
+				}
+				
+				if (!$blnAbortSendMail)
+				{
+					if ($this->sendMail($config))
+					{
+						$alreadySendTo[] =  $config->id;
+					}
+					else
+					{
+						$notSendCauseOfError[] =  array('id' => $config->id, 'firstname' => $config->firstname, 'lastname' => $config->lastname, 'email' => $config->email);
+					}
 				}
 				else
 				{
-					$notSendCauseOfErrors[] =  array('id' => $config->id, 'firstname' => $config->firstname, 'lastname' => $config->lastname, 'email' => $config->email);
+					$notSendCauseOfAbortion[] =  array('id' => $config->id, 'firstname' => $config->firstname, 'lastname' => $config->lastname, 'email' => $config->email);
 				}
 			}
 		}
 		
-		$this->log('BirthdayMailer: Daily sending of birthday mail finished. Send ' . sizeof($alreadySendTo) . ' emails. ' . sizeof($notSendCauseOfErrors) . ' emails could not be send. See birthdaymails.log for details.', 'BirthdayMailSender sendBirthdayMail()', TL_CRON);
+		$this->log('BirthdayMailer: Daily sending of birthday mail finished. Send ' . sizeof($alreadySendTo) . ' emails. '
+							. sizeof($notSendCauseOfError) . ' emails could not be send due to errors. '
+							. sizeof($notSendCauseOfAbortion) . ' emails were aborted due to custom hooks. See birthdaymails.log for details.', 'BirthdayMailSender sendBirthdayMail()', TL_CRON);
 		
-		return array('success' => sizeof($alreadySendTo), 'failed' => $notSendCauseOfErrors);
+		return array('success' => sizeof($alreadySendTo), 'failed' => $notSendCauseOfError, 'aborted' => $notSendCauseOfAbortion);
 	}
 	
 	/**
@@ -157,9 +204,9 @@ class BirthdayMailSender extends Backend
 		{
 			$text = $GLOBALS['TL_LANG']['BirthdayMailer']['mail'][$config->mailTextKey][$textType][$language];
 			
-			if (strlen($text) == 0 && $language != $defaultLanguage)
+			if (strlen($text) == 0 && $language != self::DEFAULT_LANGUAGE)
 			{
-				$text = $GLOBALS['TL_LANG']['BirthdayMailer']['mail'][$config->mailTextKey][$textType][$defaultLanguage];
+				$text = $GLOBALS['TL_LANG']['BirthdayMailer']['mail'][$config->mailTextKey][$textType][self::DEFAULT_LANGUAGE];
 			}
 		}
 
@@ -187,7 +234,7 @@ class BirthdayMailSender extends Backend
 		$language = $config->language;
 		if (strlen($language) == 0)
 		{
-			$language = $defaultLanguage;
+			$language = self::DEFAULT_LANGUAGE;
 		}
 		
 		$this->loadLanguageFile('BirthdayMailer', $language);
@@ -327,10 +374,10 @@ class BirthdayMailSender extends Backend
 					switch ($parts[1])
 					{
 						case 'salutation':
-							$salutation = $this->getSalutation($config, $language, $defaultLanguage, 'salutation_' . $config->gender);
+							$salutation = $this->getSalutation($config, $language, 'salutation_' . $config->gender);
 							if (strlen($salutation) == 0)
 							{
-								$salutation = $this->getSalutation($config, $language, $defaultLanguage, 'salutation');
+								$salutation = $this->getSalutation($config, $language, 'salutation');
 							}
 							$textArray[$count] = $salutation;
 							break;
@@ -384,7 +431,7 @@ class BirthdayMailSender extends Backend
 	 *		3. if nothing found, get default text in specified language
 	 *		4. if nothing found, get default text in language 'en'
 	 */
-	private function getSalutation($config, $language, $defaultLanguage, $textType)
+	private function getSalutation($config, $language, $textType)
 	{
 		$text = "";
 
@@ -392,9 +439,9 @@ class BirthdayMailSender extends Backend
 		{
 			$text = $GLOBALS['TL_LANG']['BirthdayMailer']['mail'][$config->mailTextKey][$textType][$language];
 			
-			if (strlen($text) == 0 && $language != $defaultLanguage)
+			if (strlen($text) == 0 && $language != self::DEFAULT_LANGUAGE)
 			{
-				$text = $GLOBALS['TL_LANG']['BirthdayMailer']['mail'][$config->mailTextKey][$textType][$defaultLanguage];
+				$text = $GLOBALS['TL_LANG']['BirthdayMailer']['mail'][$config->mailTextKey][$textType][self::DEFAULT_LANGUAGE];
 			}
 		}
 

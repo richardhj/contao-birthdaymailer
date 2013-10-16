@@ -9,16 +9,19 @@
   <h2><?php echo $this->sendingHeadline; ?></h2>
   <p class="tl_confirm"><?php echo $this->success; ?></p>
 <?php if ($this->failed): ?> 
-  <p class="tl_task_due"><?php echo $this->failed; ?></p>
+  <p class="tl_error"><?php echo $this->failureMessage; ?></p>
+<?php endif; ?> 
+<?php if ($this->aborted): ?> 
+  <p class="tl_info"><?php echo $this->abortionMessage; ?></p>
 <?php endif; ?> 
 </div>
 
 <?php if ($this->failed): ?>
 <div id="tl_messages">
-  <h2><?php echo $this->failureHeadline; ?></h2>
+  <h2><?php echo $this->failureTableHead; ?></h2>
   <table summary="Failure overview">
   <tbody>
-  <?php foreach ($this->failureArray as $failure): ?>
+  <?php foreach ($this->failures as $failure): ?>
     <tr onmouseout="Theme.hoverRow(this, 0);" onmouseover="Theme.hoverRow(this, 1);">
   	<td class="col_1">ID <?php echo $failure['id']; ?></td>
   	<td class="col_1"><?php echo $failure['firstname']; ?></td>
@@ -28,7 +31,26 @@
   <?php endforeach; ?>
   </tbody>
 	</table>
-  <p class="tl_info"><?php echo $this->failureMessage; ?></p>
+  <p class="tl_info"><?php echo $this->failureInfo; ?></p>
+</div>
+<?php endif; ?>
+
+<?php if ($this->aborted): ?>
+<div id="tl_messages">
+  <h2><?php echo $this->abortionTableHead; ?></h2>
+  <table summary="Abortion overview">
+  <tbody>
+  <?php foreach ($this->abortions as $abortion): ?>
+    <tr onmouseout="Theme.hoverRow(this, 0);" onmouseover="Theme.hoverRow(this, 1);">
+  	<td class="col_1">ID <?php echo $abortion['id']; ?></td>
+  	<td class="col_1"><?php echo $abortion['firstname']; ?></td>
+  	<td class="col_1"><?php echo $abortion['lastname']; ?></td>
+  	<td class="col_1"><?php echo $abortion['email']; ?></td>
+    </tr>
+  <?php endforeach; ?>
+  </tbody>
+	</table>
+  <p class="tl_info"><?php echo $this->abortionInfo; ?></p>
 </div>
 <?php endif; ?>
 

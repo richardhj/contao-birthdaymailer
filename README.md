@@ -42,3 +42,33 @@ Inserttags
     {{birthdaychild::age}} ... This tag returns the age of the member.
     {{birthdaymailer::email}} ... This tag returns the e-mail the configured sender.
     {{birthdaymailer::name}} ... This tag returns the name of the configured sender.
+
+Hooks
+-----
+
+### birthdayMailerAbortSendMail
+
+The "birthdayMailerAbortSendMail" hook is triggered for for checking if a birthday mail should be send. So custom checking for each birthday child is possible.
+It passes `$birthdayChildConfig` (the config of the current birthday child) and `$blnAbortSendMail` (the current value, if sending should be aborted).
+It expects a boolean return value.
+
+```
+// config.php
+
+$GLOBALS['TL_HOOKS']['birthdayMailerAbortSendMail'][]   = array('MyClass', 'myAbortSendMail');
+
+// MyClass.php
+
+class MyClass
+{
+	public function myAbortSendMail($birthdayChildConfig, $blnAbortSendMail)
+	{
+		if ($blnAbortSendMail !== TRUE && $birthdayChildConfig->id == 1)
+		{
+			$blnAbortSendMail = true;
+			$this->log('SEnding birthday mail to member with id "1" was aborted.', 'MyClass myAbortSendMail()', TL_INFO);
+		}
+		return $blnAbortSendMail;
+	}
+}
+```

@@ -155,14 +155,14 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 			'label'                 => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['mailCopy'],
 			'exclude'               => true,
 			'inputType'             => 'text',
-			'eval'                  => array('rgxp' => 'emailList','maxlength'=>255, 'tl_class'=>'w50')
+			'eval'                  => array('rgxp' => 'emails','maxlength'=>255, 'tl_class'=>'w50')
 		),
 		'mailBlindCopy' => array
 		(
 			'label'                 => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['mailBlindCopy'],
 			'exclude'               => true,
 			'inputType'             => 'text',
-			'eval'                  => array('rgxp' => 'emailList','maxlength'=>255, 'tl_class'=>'w50')
+			'eval'                  => array('rgxp' => 'emails','maxlength'=>255, 'tl_class'=>'w50')
 		),
 		'mailUseCustomText' => array
 		(

@@ -1,16 +1,19 @@
+[![Latest Version on Packagist](http://img.shields.io/packagist/v/cliffparnitzky/birthday-mailer.svg?style=flat)](https://packagist.org/packages/cliffparnitzky/birthday-mailer)
+[![Installations via composer per month](http://img.shields.io/packagist/dm/cliffparnitzky/birthday-mailer.svg?style=flat)](https://packagist.org/packages/cliffparnitzky/birthday-mailer)
+[![Installations via composer total](http://img.shields.io/packagist/dt/cliffparnitzky/birthday-mailer.svg?style=flat)](https://packagist.org/packages/cliffparnitzky/birthday-mailer)
+
 Contao Extension: BirthdayMailer
 ================================
 
-Sends a birthday e-mail to all the members having their birtday on the current day.
+Sends a birthday e-mail to all the members having their birthday on the current day.
 
 
 Installation
 ------------
 
-The extension can be installed using the Contao extension manager in the Contao
-back end. If you prefer to install it manually, download the files here:
+Install the extension via composer: [cliffparnitzky/birthday-mailer](https://packagist.org/packages/cliffparnitzky/birthday-mailer).
 
-http://www.contao.org/en/extension-list/view/BirthdayMailer.html
+If you prefer to install it manually, download the latest release here: https://github.com/cliffparnitzky/BirthdayMailer/releases
 
 
 Tracker
@@ -22,14 +25,14 @@ https://github.com/cliffparnitzky/BirthdayMailer/issues
 Compatibility
 -------------
 
-- min. version: Contao 2.9.5
-- max. version: Contao 3.1.x
+- min. Contao version: >= 3.2.0
+- max. Contao version: <  3.5.0
 
 
 Dependency
 ----------
 
-- This extension is dependent on the following extensions: [[associategroups]](http://contao.org/de/extension-list/view/associategroups.de.html), [[ExtendedEmailRegex]](http://contao.org/de/extension-list/view/ExtendedEmailRegex.de.html)
+- This extension is dependent on the following extensions: [[contao-legacy/associategroups]](https://legacy-packages-via.contao-community-alliance.org/packages/contao-legacy/associategroups)
 
 
 Inserttags

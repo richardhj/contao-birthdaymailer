@@ -252,7 +252,7 @@ class BirthdayMailSender extends \Backend
 								   . ' | html = ' . $emailHtml, 'BirthdayMailSender sendMail()', TL_CRON);
 		}
 		
-		$objEmail = new Email();
+		$objEmail = new \Email();
 
 		$objEmail->logFile = 'birthdaymails.log';
 		

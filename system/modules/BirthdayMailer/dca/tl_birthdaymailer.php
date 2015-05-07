@@ -1,8 +1,8 @@
-<?php if (!defined('TL_ROOT')) die('You cannot access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2013 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,11 +21,10 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2011-2013
+ * @copyright  Cliff Parnitzky 2011-2015
  * @author     Cliff Parnitzky
  * @package    BirthdayMailer
  * @license    LGPL
- * @filesource
  */
 
 /**
@@ -38,7 +37,14 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 	'config' => array
 	(
 		'dataContainer'           => 'Table',
-		'enableVersioning'        => true
+		'enableVersioning'        => true,
+		'sql' => array
+		(
+			'keys' => array
+			(
+				'id' => 'primary'
+			)
+		),
 	),
 
 	// List
@@ -63,7 +69,7 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['sendBirthdayMail'],
 				'href'                => 'key=sendBirthdayMail',
-				'attributes'          => 'onclick="Backend.getScrollOffset();" style="background: url(system/modules/BirthdayMailer/html/sendBirthdayMail.png) no-repeat scroll left center transparent; padding: 2px 0 3px 20px;"'
+				'attributes'          => 'onclick="Backend.getScrollOffset();" style="background: url(system/modules/BirthdayMailer/assets/sendBirthdayMail.png) no-repeat scroll left center transparent; margin-left: 15px; padding: 2px 0 3px 20px;"'
 			),
 			'all' => array
 			(
@@ -116,10 +122,17 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 		'mailUseCustomText' => 'mailTextKey'
 	),
 
-
 	// Fields
 	'fields' => array
 	(
+		'id' => array
+		(
+			'sql'                   => "int(10) unsigned NOT NULL auto_increment"
+		),
+		'tstamp' => array
+		(
+			'sql'                   => "int(10) unsigned NOT NULL default '0'"
+		),
 		'memberGroup' => array
 		(
 			'label'                 => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['memberGroup'],
@@ -127,56 +140,64 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 			'inputType'             => 'select',
 			'foreignKey'            => 'tl_member_group.name',
 			'filter'                => true,
-			'eval'                  => array('mandatory'=>true, 'unique'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50')
+			'eval'                  => array('mandatory'=>true, 'unique'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'sql'                   => "int(10) unsigned NOT NULL default '0'"
 		),
 		'priority' => array
 		(
 			'label'                 => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['priority'],
 			'exclude'               => true,
 			'inputType'             => 'text',
-			'eval'                  => array('rgxp' => 'digit','maxlength'=>10, 'tl_class'=>'w50')
+			'eval'                  => array('rgxp' => 'digit','maxlength'=>10, 'tl_class'=>'w50'),
+			'sql'                   => "int(10) unsigned NOT NULL default '0'"
 		),
 		'sender' => array
 		(
 			'label'                 => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['sender'],
 			'exclude'               => true,
 			'inputType'             => 'text',
-			'eval'                  => array('mandatory'=>true, 'rgxp' => 'email','maxlength'=>128, 'tl_class'=>'w50')
+			'eval'                  => array('mandatory'=>true, 'rgxp' => 'email','maxlength'=>128, 'tl_class'=>'w50'),
+			'sql'                   => "varchar(128) NOT NULL default ''"
 		),
 		'senderName' => array
 		(
 			'label'                 => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['senderName'],
 			'exclude'               => true,
 			'inputType'             => 'text',
-			'eval'                  => array('rgxp' => 'extnd','maxlength'=>128, 'tl_class'=>'w50')
+			'eval'                  => array('rgxp' => 'extnd','maxlength'=>128, 'tl_class'=>'w50'),
+			'sql'                   => "varchar(128) NOT NULL default ''"
 		),
 		'mailCopy' => array
 		(
 			'label'                 => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['mailCopy'],
 			'exclude'               => true,
 			'inputType'             => 'text',
-			'eval'                  => array('rgxp' => 'emails','maxlength'=>255, 'tl_class'=>'w50')
+			'eval'                  => array('rgxp' => 'emails','maxlength'=>255, 'tl_class'=>'w50'),
+			'sql'                   => "varchar(255) NOT NULL default ''"
 		),
 		'mailBlindCopy' => array
 		(
 			'label'                 => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['mailBlindCopy'],
 			'exclude'               => true,
 			'inputType'             => 'text',
-			'eval'                  => array('rgxp' => 'emails','maxlength'=>255, 'tl_class'=>'w50')
+			'eval'                  => array('rgxp' => 'emails','maxlength'=>255, 'tl_class'=>'w50'),
+			'sql'                   => "varchar(255) NOT NULL default ''"
 		),
 		'mailUseCustomText' => array
 		(
 			'label'                 => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['mailUseCustomText'],
 			'exclude'               => true,
 			'inputType'             => 'checkbox',
-			'eval'                  => array('tl_class'=>'w50', 'submitOnChange'=>true)
+			'eval'                  => array('tl_class'=>'w50', 'submitOnChange'=>true),
+			'sql'                   => "char(1) NOT NULL default ''"
 		),
 		'mailTextKey' => array
 		(
 			'label'                 => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['mailTextKey'],
 			'exclude'               => true,
 			'inputType'             => 'text',
-			'eval'                  => array('mandatory'=>true, 'maxlength'=>20, 'spaceToUnderscore'=>true, 'tl_class'=>'w50')
+			'eval'                  => array('mandatory'=>true, 'maxlength'=>20, 'spaceToUnderscore'=>true, 'tl_class'=>'w50'),
+			'sql'                   => "varchar(20) NOT NULL default ''"
 		)
 	)
 );
@@ -186,7 +207,7 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
  *
  * Provide miscellaneous methods that are used by the data configuration array.
  * PHP version 5
- * @copyright  Cliff Parnitzky 2011
+ * @copyright  Cliff Parnitzky 2011-2015
  * @author     Cliff Parnitzky
  * @package    Controller
  */

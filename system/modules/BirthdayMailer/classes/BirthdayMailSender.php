@@ -1,8 +1,8 @@
-<?php if (!defined('TL_ROOT')) die('You cannot access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2013 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,22 +21,26 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2011-2013
+ * @copyright  Cliff Parnitzky 2011-2015
  * @author     Cliff Parnitzky
  * @package    BirthdayMailer
  * @license    LGPL
- * @filesource
  */
+
+/**
+ * Run in a custom namespace, so the class can be replaced
+ */
+namespace BirthdayMailer;
 
 /**
  * Class BirthdayMailSender
  *
  * Provide methods to send the birthday emails
- * @copyright  Cliff Parnitzky 2011-2013
+ * @copyright  Cliff Parnitzky 2011-2015
  * @author     Cliff Parnitzky
  * @package    BirthdayMailer
  */
-class BirthdayMailSender extends Backend
+class BirthdayMailSender extends \Backend
 {
 	// the default language will always be englisch
 	const DEFAULT_LANGUAGE = 'en';
@@ -56,7 +60,7 @@ class BirthdayMailSender extends Backend
 			$result = $this->sendBirthdayMail();
 			
 			// Create template object
-			$objTemplate = new BackendTemplate('be_birthdaymailer');
+			$objTemplate = new \BackendTemplate('be_birthday-mailer');
 
 			$objTemplate->backLink = '<a href="'.ampersand(str_replace('&key=sendBirthdayMail', '', $this->Environment->request)).'" class="header_back" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['backBT']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>';
 			$objTemplate->headline = $GLOBALS['TL_LANG']['tl_birthdaymailer']['manualExecution']['headline'];
@@ -96,15 +100,6 @@ class BirthdayMailSender extends Backend
 			$this->log('BirthdayMailSender: Extension "associategroups" is required!', 'BirthdayMailSender sendBirthdayMail()', TL_ERROR);
 			return false;
 		}
-
-		// first check if required extension 'ExtendedEmailRegex' is installed
-		if (!in_array('extendedEmailRegex', $this->Config->getActiveModules()))
-		{
-			$this->log('BirthdayMailSender: Extension "ExtendedEmailRegex" is required!', 'BirthdayMailSender sendBirthdayMail()', TL_ERROR);
-			return false;
-		}
-		
-		$this->import('ExtendedEmailRegex', 'Base');
 		
 		$alreadySendTo = array();
 		$notSendCauseOfError = array();
@@ -282,13 +277,13 @@ class BirthdayMailSender extends Backend
 			{
 				if (strlen($config->mailCopy) > 0)
 				{
-					$emailCC = ExtendedEmailRegex::getEmailsFromList($config->mailCopy);
+					$emailCC = trimsplit(',', $config->mailCopy);
 					$objEmail->sendCc($emailCC);
 				}
 				
 				if (strlen($config->mailBlindCopy) > 0)
 				{
-					$emailBCC = ExtendedEmailRegex::getEmailsFromList($config->mailBlindCopy);
+					$emailBCC = trimsplit(',', $config->mailBlindCopy);
 					$objEmail->sendBcc($emailBCC);
 				}
 				

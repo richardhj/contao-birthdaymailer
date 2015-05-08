@@ -19,11 +19,13 @@ ClassLoader::addNamespaces(array
 	'BirthdayMailer',
 ));
 
+
 /**
  * Register the classes
  */
 ClassLoader::addClasses(array
 (
+	// Classes
 	'BirthdayMailer\BirthdayMailSender' => 'system/modules/BirthdayMailer/classes/BirthdayMailSender.php',
 ));
 

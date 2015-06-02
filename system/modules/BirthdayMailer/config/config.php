@@ -50,4 +50,45 @@ $GLOBALS['BE_MOD']['accounts']['BirthdayMailer'] = array
 // Daily cron job to send birthday mails
 $GLOBALS['TL_CRON']['daily'][] = array('BirthdayMailSender', 'sendBirthdayMail');
 
+/**
+ * Notification Center Notification Types
+ */
+$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['BirthdayMailer']['birthday_mail']['recipients'] = array(
+    'birthdaychild_email', // returns the email of the member
+    'admin_email'
+);
+$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['BirthdayMailer']['birthday_mail']['email_subject'] = array(
+    'birthdaychild_*', // returns all the values of the current member (replace * with any attribute of the member, e.g. firstname or company, the attribute password is not allowed)
+    'birthdaychild_salutation', // returns the salutation of the member (depending on gender)
+    'birthdaychild_name', // returns first and last name of the member
+    'birthdaychild_age', // returns the age of the member
+    'birthdaymailer_groupname', // returns the name of the member group of the current configuration
+    'admin_email'
+);
+$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['BirthdayMailer']['birthday_mail']['email_text'] = array(
+    'birthdaychild_*', // returns all the values of the current member (replace * with any attribute of the member, e.g. firstname or company, the attribute password is not allowed)
+    'birthdaychild_salutation', // returns the salutation of the member (depending on gender)
+    'birthdaychild_name', // returns first and last name of the member
+    'birthdaychild_age', // returns the age of the member
+    'birthdaymailer_groupname', // returns the name of the member group of the current configuration
+    'admin_email'
+);
+$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['BirthdayMailer']['birthday_mail']['email_html'] = array(
+    'birthdaychild_*', // returns all the values of the current member (replace * with any attribute of the member, e.g. firstname or company, the attribute password is not allowed)
+    'birthdaychild_salutation', // returns the salutation of the member (depending on gender)
+    'birthdaychild_name', // returns first and last name of the member
+    'birthdaychild_age', // returns the age of the member
+    'birthdaymailer_groupname', // returns the name of the member group of the current configuration
+    'admin_email'
+);
+$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['BirthdayMailer']['birthday_mail']['email_recipient_cc'] = array(
+    'admin_email'
+);
+$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['BirthdayMailer']['birthday_mail']['email_recipient_bcc'] = array(
+    'admin_email'
+);
+$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['BirthdayMailer']['birthday_mail']['email_replyTo'] = array(
+    'admin_email'
+);
+
 ?>

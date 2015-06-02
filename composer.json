@@ -32,7 +32,9 @@
   "extra":{
     "contao":{
       "sources":{
-        "system/modules/BirthdayMailer":"system/modules/BirthdayMailer"
+        "system/modules/BirthdayMailer":"system/modules/BirthdayMailer",
+        "files/tiny_templates/birthdaymailer_default_de.html": "files/tiny_templates/birthdaymailer_default_de.html",
+        "files/tiny_templates/birthdaymailer_default_en.html": "files/tiny_templates/birthdaymailer_default_en.html"
       }
     },
     "branch-alias": {

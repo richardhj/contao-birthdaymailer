@@ -59,25 +59,31 @@ $GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['BirthdayMailer']['birthday
 );
 $GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['BirthdayMailer']['birthday_mail']['email_subject'] = array(
     'birthdaychild_*', // returns all the values of the current member (replace * with any attribute of the member, e.g. firstname or company, the attribute password is not allowed)
-    'birthdaychild_salutation', // returns the salutation of the member (depending on gender)
     'birthdaychild_name', // returns first and last name of the member
     'birthdaychild_age', // returns the age of the member
+    'birthdaychild_salutation', // returns the salutation of the member (depending on gender)
+    'birthdaychild_welcoming_personally', // returns the personally welcoming for the birthday child (depending on gender)
+    'birthdaychild_welcoming_formally', // returns the formally welcoming for the birthday child (depending on gender)
     'birthdaymailer_groupname', // returns the name of the member group of the current configuration
     'admin_email'
 );
 $GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['BirthdayMailer']['birthday_mail']['email_text'] = array(
     'birthdaychild_*', // returns all the values of the current member (replace * with any attribute of the member, e.g. firstname or company, the attribute password is not allowed)
-    'birthdaychild_salutation', // returns the salutation of the member (depending on gender)
     'birthdaychild_name', // returns first and last name of the member
     'birthdaychild_age', // returns the age of the member
+    'birthdaychild_salutation', // returns the salutation of the member (depending on gender)
+    'birthdaychild_welcoming_personally', // returns the personally welcoming for the birthday child (depending on gender)
+    'birthdaychild_welcoming_formally', // returns the formally welcoming for the birthday child (depending on gender)
     'birthdaymailer_groupname', // returns the name of the member group of the current configuration
     'admin_email'
 );
 $GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['BirthdayMailer']['birthday_mail']['email_html'] = array(
     'birthdaychild_*', // returns all the values of the current member (replace * with any attribute of the member, e.g. firstname or company, the attribute password is not allowed)
-    'birthdaychild_salutation', // returns the salutation of the member (depending on gender)
     'birthdaychild_name', // returns first and last name of the member
     'birthdaychild_age', // returns the age of the member
+    'birthdaychild_salutation', // returns the salutation of the member (depending on gender)
+    'birthdaychild_welcoming_personally', // returns the personally welcoming for the birthday child (depending on gender)
+    'birthdaychild_welcoming_formally', // returns the formally welcoming for the birthday child (depending on gender)
     'birthdaymailer_groupname', // returns the name of the member group of the current configuration
     'admin_email'
 );

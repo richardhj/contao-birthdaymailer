@@ -44,6 +44,8 @@ Simple tokens
 ##birthdaychild_email## ... returns the e-mail address of the birthday child
 ##birthdaychild_age## ... returns the age of the birthday child
 ##birthdaychild_salutation## ... returns the salutation for the birthday child (depending on gender)
+##birthdaychild_welcoming_personally## ... returns the personally welcoming for the birthday child (depending on gender)
+##birthdaychild_welcoming_formally## ... returns the formally welcoming for the birthday child (depending on gender)
 ##birthdaymailer_groupname## ... returns the name of the member group of the used birthdaymailer configuration
 ```
 

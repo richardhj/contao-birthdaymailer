@@ -32,6 +32,6 @@ $GLOBALS['TL_LANG']['tl_settings']['birthdayMailerAllowDuplicates']         = ar
 $GLOBALS['TL_LANG']['tl_settings']['birthdayMailerLogDebugInfo']            = array('Zusätzliche Debug Informationen loggen', 'Wenn diese Option gewählt ist, werden zusätzliche Debug Informationen im System-Log eingetragen (pro E-Mail die versendet werden soll ein Eintrag mit allen Inhalten).');
 $GLOBALS['TL_LANG']['tl_settings']['birthdayMailerDeveloperMode']           = array('Entwicklermodus', 'Aktiviert den Entwicklermodus. Emails gehen nur an die Entwickler E-Mail-Adresse.');
 $GLOBALS['TL_LANG']['tl_settings']['birthdayMailerDeveloperModeEmail']      = array('Entwickler E-Mail-Adresse', 'Im Entwicklermodus werden alle E-Mails an diese Adresse umgeleitet.');
-$GLOBALS['TL_LANG']['tl_settings']['birthdayMailerDeveloperModeIgnoreDate'] = array('Geburtsdatum ignorieren', 'Umgeht die Prüfung ob ein Mitglied am aktuellen Tag Geburtstag hat. Es wird für jedes aktive Mitglied eine Email gesendet.');
+$GLOBALS['TL_LANG']['tl_settings']['birthdayMailerDeveloperModeIgnoreDate'] = array('Geburtsdatum im Entwicklermodus ignorieren', 'Umgeht im Entwicklermodus die Prüfung ob ein Mitglied am aktuellen Tag Geburtstag hat. Es wird für jedes aktive Mitglied eine Email gesendet.');
 
 ?>

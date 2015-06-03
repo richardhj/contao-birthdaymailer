@@ -128,7 +128,7 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'      => '{config_legend},memberGroup;{disable_legend},disable'
+		'default'      => '{config_legend},memberGroup,nc_notification;{disable_legend},disable'
 	),
 
 	// Fields
@@ -160,7 +160,23 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 			'inputType'             => 'select',
 			'foreignKey'            => 'tl_member_group.name',
 			'filter'                => true,
-			'eval'                  => array('mandatory'=>true, 'unique'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'eval'                  => array('mandatory'=>true, 'unique'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50', 'chosen'=>true),
+			'sql'                   => "int(10) unsigned NOT NULL default '0'",
+			'relation'              => array('type'=>'hasOne', 'load'=>'eager')
+		),
+		'nc_notification' => array
+		(
+			'label'                 => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['nc_notification'],
+			'exclude'               => true,
+			'inputType'             => 'select',
+			'foreignKey'            => 'tl_nc_notification.title',
+			'filter'                => true,
+			'options_callback'      => array('tl_birthdaymailer', 'getNotificationChoices'), 
+			'eval'                  => array('mandatory'=>true, 'unique'=>true, 'includeBlankOption'=>true, 'tl_class'=>'clr w50', 'chosen'=>true, 'submitOnChange'=>true),
+			'wizard' => array
+			(
+				array('tl_birthdaymailer', 'editNotification')
+			),
 			'sql'                   => "int(10) unsigned NOT NULL default '0'",
 			'relation'              => array('type'=>'hasOne', 'load'=>'eager')
 		),
@@ -322,12 +338,39 @@ class tl_birthdaymailer extends Backend
 		$time = time();
 
 		// Update the database
-		$this->Database->prepare("UPDATE tl_birthdaymailer SET tstamp=$time, disable='" . ($blnVisible ? '' : 1) . "' WHERE id=?")
-					   ->execute($intId);
+		\Database::getInstance()->prepare("UPDATE tl_birthdaymailer SET tstamp=$time, disable='" . ($blnVisible ? '' : 1) . "' WHERE id=?")
+														->execute($intId);
 
 		$objVersions->create();
 		$this->log('A new version of record "tl_birthdaymailer.id='.$intId.'" has been created'.$this->getParentEntries('tl_birthdaymailer', $intId), __METHOD__, TL_GENERAL);
 	}
+	
+	/**
+	 * Get notification choices
+	 *
+	 * @return array
+	 */
+	public function getNotificationChoices()
+	{
+			$arrChoices = array();
+			$objNotifications = \Database::getInstance()->execute("SELECT id,title FROM tl_nc_notification WHERE type='birthday_mail' ORDER BY title");
+
+			while ($objNotifications->next()) {
+					$arrChoices[$objNotifications->id] = $objNotifications->title;
+			}
+
+			return $arrChoices;
+	}
+	
+	/**
+	 * Return the edit notification wizard
+	 * @param \DataContainer
+	 * @return string
+	 */
+	public function editNotification(DataContainer $dc)
+	{
+		return ($dc->value < 1) ? '' : ' <a href="contao/main.php?do=nc_notifications&table=tl_nc_message&amp;id=' . $dc->value . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(specialchars($GLOBALS['TL_LANG']['tl_birthdaymailer']['edit_notification'][1]), $dc->value) . '" style="padding-left:3px" onclick="Backend.openModalIframe({\'width\':768,\'title\':\'' . specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_birthdaymailer']['edit_notification'][1], $dc->value))) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.gif', $GLOBALS['TL_LANG']['tl_birthdaymailer']['edit_notification'][0], 'style="vertical-align:top"') . '</a>';
+	} 
 }
 
 ?>

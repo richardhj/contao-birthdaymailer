@@ -121,14 +121,7 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__' => array('mailUseCustomText'),
-		'default'      => '{config_legend},memberGroup;{email_legend},sender,senderName,mailCopy,mailBlindCopy,mailUseCustomText'
-	),
-
-	// Subpalettes
-	'subpalettes' => array
-	(
-		'mailUseCustomText' => 'mailTextKey'
+		'default'      => '{config_legend},memberGroup'
 	),
 
 	// Fields
@@ -163,54 +156,6 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 			'eval'                  => array('mandatory'=>true, 'unique'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
 			'sql'                   => "int(10) unsigned NOT NULL default '0'",
 			'relation'              => array('type'=>'hasOne', 'load'=>'eager')
-		),
-		'sender' => array
-		(
-			'label'                 => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['sender'],
-			'exclude'               => true,
-			'inputType'             => 'text',
-			'eval'                  => array('mandatory'=>true, 'rgxp' => 'email','maxlength'=>128, 'tl_class'=>'w50'),
-			'sql'                   => "varchar(128) NOT NULL default ''"
-		),
-		'senderName' => array
-		(
-			'label'                 => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['senderName'],
-			'exclude'               => true,
-			'inputType'             => 'text',
-			'eval'                  => array('rgxp' => 'extnd','maxlength'=>128, 'tl_class'=>'w50'),
-			'sql'                   => "varchar(128) NOT NULL default ''"
-		),
-		'mailCopy' => array
-		(
-			'label'                 => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['mailCopy'],
-			'exclude'               => true,
-			'inputType'             => 'text',
-			'eval'                  => array('rgxp' => 'emails','maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                   => "varchar(255) NOT NULL default ''"
-		),
-		'mailBlindCopy' => array
-		(
-			'label'                 => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['mailBlindCopy'],
-			'exclude'               => true,
-			'inputType'             => 'text',
-			'eval'                  => array('rgxp' => 'emails','maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                   => "varchar(255) NOT NULL default ''"
-		),
-		'mailUseCustomText' => array
-		(
-			'label'                 => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['mailUseCustomText'],
-			'exclude'               => true,
-			'inputType'             => 'checkbox',
-			'eval'                  => array('tl_class'=>'w50', 'submitOnChange'=>true),
-			'sql'                   => "char(1) NOT NULL default ''"
-		),
-		'mailTextKey' => array
-		(
-			'label'                 => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['mailTextKey'],
-			'exclude'               => true,
-			'inputType'             => 'text',
-			'eval'                  => array('mandatory'=>true, 'maxlength'=>20, 'spaceToUnderscore'=>true, 'tl_class'=>'w50'),
-			'sql'                   => "varchar(20) NOT NULL default ''"
 		)
 	)
 );

@@ -31,18 +31,11 @@
  * Fields
  */
 $GLOBALS['TL_LANG']['tl_birthdaymailer']['memberGroup']       = array('Membergroup', 'Please select the member group, that should receive the automatic birthday emails.');
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['sender']            = array('Senderaddress', 'Please enter the e-mail address for the sender.');
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['senderName']        = array('Sendername', 'Please enter a individual name for the sender.');
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['mailCopy']          = array('Copy to (CC)', 'Please enter a comma-delimited list of email addresses that should receive a copy of the birthday email.');
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['mailBlindCopy']     = array('Blind copy (BCC)', 'Please enter a comma-delimited list of email addresses that should receive a blind copy of the birthday email.');
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['mailUseCustomText'] = array('Use custom email texts', 'Please select if instead of the default content (<i>salutation, subject, html, text</i>) in the email custom texts should be used.');
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['mailTextKey']       = array('Key for custom email texts', 'Please enter a key for the custom email texts. This is needed to determine the custom texts.<br/><br/>Example (insert into <i>system/config/langconfig.php</i>):<br/><code>$GLOBALS[\'TL_LANG\'][\'BirthdayMailer\'][\'mail\'][\'<b>MY_KEY</b>\'][\'subject\'][\'en\'] = \'English Custom Subject\'; </code>');
 
 /**
  * Legends
  */
 $GLOBALS['TL_LANG']['tl_birthdaymailer']['config_legend'] = 'Configuration';
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['email_legend']  = 'Email settings';
 
 /**
  * Buttons

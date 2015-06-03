@@ -31,18 +31,11 @@
  * Fields
  */
 $GLOBALS['TL_LANG']['tl_birthdaymailer']['memberGroup']       = array('Mitgliedergruppe', 'Bitte wählen Sie die Mitgliedergruppe aus, die automatische Geburtstagsemails erhalten soll.');
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['sender']            = array('Absenderadresse', 'Bitte geben Sie die E-Mail-Adresse für den Absender ein.');
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['senderName']        = array('Absendername', 'Bitte geben Sie einen individuellen Namen für den Absender ein.');
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['mailCopy']          = array('Kopie an (CC)', 'Bitte geben Sie eine Liste kommagetrennter E-Mail-Adressen an, die eine Kopie der Geburtstagsemail erhalten sollen.');
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['mailBlindCopy']     = array('Blindkopie an (BCC)', 'Bitte geben Sie eine Liste kommagetrennter E-Mail-Adressen an, die eine Blindkopie der Geburtstagsemail erhalten sollen.');
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['mailUseCustomText'] = array('Eigene E-Mail Texte verwenden', 'Bitte geben Sie ob statt der Standardinhalte (<i>Anrede, Betreff, HTML, Text</i>) in der E-Mail eigene Texte verwendet werden sollen.');
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['mailTextKey']       = array('Schlüssel für eigene E-Mail Texte', 'Bitte geben Sie den Schlüssel für die eigenen E-Mail Texte. Dieser wird benötigt um die eigenen Texte zu ermitteln.<br/><br/>Beispiel (Eintrag in <i>system/config/langconfig.php</i>):<br/><code>$GLOBALS[\'TL_LANG\'][\'BirthdayMailer\'][\'mail\'][\'<b>MEIN_SCHLUESSEL</b>\'][\'subject\'][\'en\'] = \'English Custom Subject\'; </code>');
 
 /**
  * Legends
  */
 $GLOBALS['TL_LANG']['tl_birthdaymailer']['config_legend'] = 'Konfiguration';
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['email_legend']  = 'Emaileinstellungen';
 
 /**
  * Buttons

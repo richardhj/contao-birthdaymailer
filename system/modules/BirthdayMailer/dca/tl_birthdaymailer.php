@@ -38,6 +38,7 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 	(
 		'dataContainer'           => 'Table',
 		'enableVersioning'        => true,
+		'label'                   => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['root_label'],
 		'sql' => array
 		(
 			'keys' => array
@@ -51,16 +52,17 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 	'list' => array
 	(
 		'sorting' => array (
+			'mode'                  => 5,
+			'fields'                => array('sorting'),
+			'flag'                  => 11,
 			'panelLayout'           => 'filter,limit',
-			'fields'                => array('priority'),
-			'flag'                  => 2,
-			'mode'                  => 1,
-			'disableGrouping'       => true
+			'paste_button_callback' => array('tl_birthdaymailer', 'pasteConfig'),
+			'icon'                  => 'system/modules/BirthdayMailer/assets/icon.png',
 		),
 		'label' => array
 		(
-			'fields'                => array('memberGroup:tl_member_group.name', 'priority'),
-			'format'                => '%s <span style="color:#b3b3b3; padding-left:3px;">[' . $GLOBALS['TL_LANG']['tl_birthdaymailer']['priority'][0] . ': %s]</span>',
+			'fields'                => array('memberGroup:tl_member_group.name'),
+			'format'                => '%s',
 			'label_callback'        => array('tl_birthdaymailer', 'addIcon') 
 		),
 		'global_operations' => array
@@ -93,6 +95,13 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 				'href'                => 'act=copy',
 				'icon'                => 'copy.gif'
 			),
+			'cut' => array
+			(
+				'label'               => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['cut'],
+				'href'                => 'act=paste&amp;mode=cut',
+				'icon'                => 'cut.gif',
+				'attributes'          => 'onclick="Backend.getScrollOffset()"', 
+			),
 			'delete' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['delete'],
@@ -113,7 +122,7 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 	'palettes' => array
 	(
 		'__selector__' => array('mailUseCustomText'),
-		'default'      => '{config_legend},memberGroup,priority;{email_legend},sender,senderName,mailCopy,mailBlindCopy,mailUseCustomText'
+		'default'      => '{config_legend},memberGroup;{email_legend},sender,senderName,mailCopy,mailBlindCopy,mailUseCustomText'
 	),
 
 	// Subpalettes
@@ -129,6 +138,17 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 		(
 			'sql'                   => "int(10) unsigned NOT NULL auto_increment"
 		),
+		'pid' => array
+		(
+			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+		),
+		'sorting' => array
+		(
+			'label'                 => &$GLOBALS['TL_LANG']['MSC']['sorting'],
+			'sorting'               => true,
+			'flag'                  => 11,
+			'sql'                   => "int(10) unsigned NOT NULL default '0'"
+		),
 		'tstamp' => array
 		(
 			'sql'                   => "int(10) unsigned NOT NULL default '0'"
@@ -141,15 +161,8 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 			'foreignKey'            => 'tl_member_group.name',
 			'filter'                => true,
 			'eval'                  => array('mandatory'=>true, 'unique'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                   => "int(10) unsigned NOT NULL default '0'"
-		),
-		'priority' => array
-		(
-			'label'                 => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['priority'],
-			'exclude'               => true,
-			'inputType'             => 'text',
-			'eval'                  => array('rgxp' => 'digit','maxlength'=>10, 'tl_class'=>'w50'),
-			'sql'                   => "int(10) unsigned NOT NULL default '0'"
+			'sql'                   => "int(10) unsigned NOT NULL default '0'",
+			'relation'              => array('type'=>'hasOne', 'load'=>'eager')
 		),
 		'sender' => array
 		(
@@ -234,7 +247,29 @@ class tl_birthdaymailer extends Backend
 			$image .= '_';
 		}
 
-		return sprintf('<div class="list_icon" style="background-image:url(\'system/themes/%s/images/%s.gif\');">%s</div>', $this->getTheme(), $image, $label);
+		return sprintf('<img width="18" height="18" style="margin-left: 0px;" alt="" src="system/themes/%s/images/%s.gif"/> %s', $this->getTheme(), $image, $label);
+		//return sprintf('<div class="list_icon" style="background-image:url(\'system/themes/%s/images/%s.gif\');">%s</div>', $this->getTheme(), $image, $label);
+	}
+	
+	/**
+	 * Return the paste button
+	 * @param object
+	 * @param array
+	 * @param string
+	 * @param boolean
+	 * @param array
+	 * @return string
+	 */
+	public function pasteConfig(DataContainer $dc, $row, $table, $cr, $arrClipboard=false)
+	{
+		$this->import('BackendUser', 'User');
+		$imagePasteAfter = $this->generateImage('pasteafter.gif', sprintf($GLOBALS['TL_LANG'][$dc->table]['pasteafter'][1], $row['id']));
+		$imagePasteInto = $this->generateImage('pasteinto.gif', sprintf($GLOBALS['TL_LANG'][$dc->table]['pasteinto'][1], $row['id']));
+		if ($row['id'] == 0)
+		{
+			return $cr ? $this->generateImage('pasteinto_.gif').' ' : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&mode=2&pid='.$row['id'].'&id='.$arrClipboard['id']).'" title="'.specialchars(sprintf($GLOBALS['TL_LANG'][$dc->table]['pasteinto'][1], $row['id'])).'" onclick="Backend.getScrollOffset();">'.$imagePasteInto.'</a> ';
+		}
+		return (($arrClipboard['mode'] == 'cut' && $arrClipboard['id'] == $row['id']) || $cr) ? $this->generateImage('pasteafter_.gif').' ' : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&mode=1&pid='.$row['id'].'&id='.$arrClipboard['id']).'" title="'.specialchars(sprintf($GLOBALS['TL_LANG'][$dc->table]['pasteafter'][1], $row['id'])).'" onclick="Backend.getScrollOffset();">'.$imagePasteAfter.'</a> ';
 	}
 } 
 

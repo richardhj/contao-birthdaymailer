@@ -31,7 +31,6 @@
  * Fields
  */
 $GLOBALS['TL_LANG']['tl_birthdaymailer']['memberGroup']       = array('Mitgliedergruppe', 'Bitte wählen Sie die Mitgliedergruppe aus, die automatische Geburtstagsemails erhalten soll.');
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['priority']          = array('Priorität', 'Bitte geben Sie einen Prioritätswert für diese Konfiguration ein. Bei mehreren Konfigurationen, die für ein Mitglied zutreffen, wird immer die mit dem höchsten Wert zuerst verwendet.');
 $GLOBALS['TL_LANG']['tl_birthdaymailer']['sender']            = array('Absenderadresse', 'Bitte geben Sie die E-Mail-Adresse für den Absender ein.');
 $GLOBALS['TL_LANG']['tl_birthdaymailer']['senderName']        = array('Absendername', 'Bitte geben Sie einen individuellen Namen für den Absender ein.');
 $GLOBALS['TL_LANG']['tl_birthdaymailer']['mailCopy']          = array('Kopie an (CC)', 'Bitte geben Sie eine Liste kommagetrennter E-Mail-Adressen an, die eine Kopie der Geburtstagsemail erhalten sollen.');
@@ -53,7 +52,15 @@ $GLOBALS['TL_LANG']['tl_birthdaymailer']['new']              = array('Neue Konfi
 $GLOBALS['TL_LANG']['tl_birthdaymailer']['show']             = array('Konfigurationsdetails', 'Details der Konfiguration ID %s anzeigen');
 $GLOBALS['TL_LANG']['tl_birthdaymailer']['edit']             = array('Konfiguration bearbeiten', 'Konfiguration ID %s bearbeiten');
 $GLOBALS['TL_LANG']['tl_birthdaymailer']['copy']             = array('Konfiguration duplizieren', 'Konfiguration ID %s duplizieren');
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['cut']              = array('Konfiguration verschieben', 'Konfiguration ID %s verschieben');
 $GLOBALS['TL_LANG']['tl_birthdaymailer']['delete']           = array('Konfiguration löschen', 'Konfiguration ID %s löschen');
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['pasteafter']       = array('Danach einfügen', 'Nach der Konfiguration ID %s einfügen');
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['pasteinto']        = array('Am Anfang einfügen', 'Am Anfang einfügen');
+
+/**
+ * Misc texts
+ */
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['root_label'] = 'Geburtstagsmailer Konfigurationen';
 
 /**
  * Manual execution messages

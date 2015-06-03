@@ -113,7 +113,7 @@ class BirthdayMailSender extends \Backend
 												. "JOIN tl_member_to_group ON tl_member_to_group.member_id = tl_member.id "
 												. "JOIN tl_member_group ON tl_member_group.id = tl_member_to_group.group_id "
 												. "JOIN tl_birthdaymailer ON tl_birthdaymailer.membergroup = tl_member_group.id "
-												. "ORDER BY tl_member.id, tl_birthdaymailer.priority DESC")
+												. "ORDER BY tl_member.id, tl_birthdaymailer.sorting DESC")
 											 ->execute();
 											
 		if($config->numRows < 1)

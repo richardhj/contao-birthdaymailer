@@ -63,7 +63,7 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 		(
 			'fields'                => array('memberGroup:tl_member_group.name'),
 			'format'                => '%s',
-			'label_callback'        => array('tl_birthdaymailer', 'addIcon') 
+			'label_callback'        => array('tl_birthdaymailer', 'addIcon')
 		),
 		'global_operations' => array
 		(
@@ -100,7 +100,7 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 				'label'               => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['cut'],
 				'href'                => 'act=paste&amp;mode=cut',
 				'icon'                => 'cut.gif',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"', 
+				'attributes'          => 'onclick="Backend.getScrollOffset()"',
 			),
 			'delete' => array
 			(
@@ -108,6 +108,13 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 				'href'                => 'act=delete',
 				'icon'                => 'delete.gif',
 				'attributes'          => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"'
+			),
+			'toggle' => array
+			(
+				'label'               => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['toggle'],
+				'icon'                => 'visible.gif',
+				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
+				'button_callback'     => array('tl_birthdaymailer', 'toggleIcon')
 			),
 			'show' => array
 			(
@@ -121,7 +128,7 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'      => '{config_legend},memberGroup'
+		'default'      => '{config_legend},memberGroup;{disable_legend},disable'
 	),
 
 	// Fields
@@ -156,6 +163,14 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 			'eval'                  => array('mandatory'=>true, 'unique'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
 			'sql'                   => "int(10) unsigned NOT NULL default '0'",
 			'relation'              => array('type'=>'hasOne', 'load'=>'eager')
+		),
+		'disable' => array
+		(
+			'label'                 => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['disable'],
+			'exclude'               => true,
+			'filter'                => true,
+			'inputType'             => 'checkbox',
+			'sql'                   => "char(1) NOT NULL default ''"
 		)
 	)
 );
@@ -172,18 +187,29 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 class tl_birthdaymailer extends Backend
 {
 	/**
+	 * Import the back end user object
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+		$this->import('BackendUser', 'User');
+	}
+	
+	/**
 	 * Add an image to each record
 	 * @param array
 	 * @param string
+	 * @param \DataContainer
+	 * @param array
 	 * @return string
 	 */
-	public function addIcon($row, $label)
+	public function addIcon($row, $label, DataContainer $dc, $args)
 	{
-		 $memberGroupId = $row['memberGroup']; 
- 
-        // get group from database
-        $memberGroup = $this->Database->prepare("SELECT * FROM tl_member_group WHERE id=?") 
-                               ->execute($memberGroupId);
+		 $memberGroupId = $row['memberGroup'];
+		 
+		 // get group from database
+		 $memberGroup = $this->Database->prepare("SELECT * FROM tl_member_group WHERE id=?")
+																	 ->execute($memberGroupId);
 		
 		$image = 'mgroup';
 
@@ -216,6 +242,86 @@ class tl_birthdaymailer extends Backend
 		}
 		return (($arrClipboard['mode'] == 'cut' && $arrClipboard['id'] == $row['id']) || $cr) ? $this->generateImage('pasteafter_.gif').' ' : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&mode=1&pid='.$row['id'].'&id='.$arrClipboard['id']).'" title="'.specialchars(sprintf($GLOBALS['TL_LANG'][$dc->table]['pasteafter'][1], $row['id'])).'" onclick="Backend.getScrollOffset();">'.$imagePasteAfter.'</a> ';
 	}
-} 
+	
+	/**
+	 * Return the "toggle visibility" button
+	 * @param array
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @return string
+	 */
+	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
+	{
+		if (strlen(Input::get('tid')))
+		{
+			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->redirect($this->getReferer());
+		}
+
+		// Check permissions AFTER checking the tid, so hacking attempts are logged
+		if (!$this->User->isAdmin && !$this->User->hasAccess('tl_birthdaymailer::disable', 'alexf'))
+		{
+			return '';
+		}
+
+		$href .= '&amp;tid='.$row['id'].'&amp;state='.$row['disable'];
+
+		if ($row['disable'])
+		{
+			$icon = 'invisible.gif';
+		}
+
+		return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ';
+	}
+
+
+	/**
+	 * Disable/enable a configuration
+	 * @param integer
+	 * @param boolean
+	 * @param \DataContainer
+	 */
+	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
+	{
+		// Check permissions
+		if (!$this->User->isAdmin && !$this->User->hasAccess('tl_birthdaymailer::disable', 'alexf'))
+		{
+			$this->log('Not enough permissions to activate/deactivate bithday mailer configuration ID "'.$intId.'"', __METHOD__, TL_ERROR);
+			$this->redirect('contao/main.php?act=error');
+		}
+
+		$objVersions = new Versions('tl_birthdaymailer', $intId);
+		$objVersions->initialize();
+
+		// Trigger the save_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_birthdaymailer']['fields']['disable']['save_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_birthdaymailer']['fields']['disable']['save_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$blnVisible = $this->$callback[0]->$callback[1]($blnVisible, ($dc ?: $this));
+				}
+				elseif (is_callable($callback))
+				{
+					$blnVisible = $callback($blnVisible, ($dc ?: $this));
+				}
+			}
+		}
+
+		$time = time();
+
+		// Update the database
+		$this->Database->prepare("UPDATE tl_birthdaymailer SET tstamp=$time, disable='" . ($blnVisible ? '' : 1) . "' WHERE id=?")
+					   ->execute($intId);
+
+		$objVersions->create();
+		$this->log('A new version of record "tl_birthdaymailer.id='.$intId.'" has been created'.$this->getParentEntries('tl_birthdaymailer', $intId), __METHOD__, TL_GENERAL);
+	}
+}
 
 ?>

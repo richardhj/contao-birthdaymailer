@@ -30,12 +30,14 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['memberGroup']       = array('Membergroup', 'Please select the member group, that should receive the automatic birthday emails.');
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['memberGroup'] = array('Membergroup', 'Please select the member group, that should receive the automatic birthday emails.');
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['disable']     = array('Deactivate', 'Temporarily disable the configuration.');
 
 /**
  * Legends
  */
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['config_legend'] = 'Configuration';
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['config_legend']  = 'Configuration';
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['disable_legend'] = 'Deactivation';
 
 /**
  * Buttons
@@ -47,6 +49,7 @@ $GLOBALS['TL_LANG']['tl_birthdaymailer']['edit']             = array('Edit confi
 $GLOBALS['TL_LANG']['tl_birthdaymailer']['copy']             = array('Duplicate configuration', 'Duplicate configuration ID %s');
 $GLOBALS['TL_LANG']['tl_birthdaymailer']['cut']              = array('Move configuration', 'Move configuration ID %s');
 $GLOBALS['TL_LANG']['tl_birthdaymailer']['delete']           = array('Delete configuration', 'Delete configuration ID %s');
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['toggle']           = array('Konfiguration veröffentlichen/unveröffentlichen', 'Konfiguration ID %s veröffentlichen/unveröffentlichen');
 $GLOBALS['TL_LANG']['tl_birthdaymailer']['pasteafter']       = array('Paste after', 'Paste after configuration ID %s');
 $GLOBALS['TL_LANG']['tl_birthdaymailer']['pasteinto']        = array('Paste on top', 'Paste on top');
 

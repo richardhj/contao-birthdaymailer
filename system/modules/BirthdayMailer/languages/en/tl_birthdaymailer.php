@@ -30,7 +30,7 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['memberGroup'] = array('Membergroup', 'Please select the member group, that should receive the automatic birthday emails.');
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['memberGroup'] = array('Member group', 'Please select the member group, that should receive the automatic birthday emails.');
 $GLOBALS['TL_LANG']['tl_birthdaymailer']['disable']     = array('Deactivate', 'Temporarily disable the configuration.');
 
 /**
@@ -56,7 +56,9 @@ $GLOBALS['TL_LANG']['tl_birthdaymailer']['pasteinto']        = array('Paste on t
 /**
  * Misc texts
  */
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['root_label'] = 'Birthday mailer configurations';
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['root_label']     = 'Birthday mailer configurations';
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['group_enabled']  = 'Active member group';
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['group_disabled'] = 'Deactivated member group';
 
 /**
  * Manual execution messages

@@ -57,7 +57,7 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 			'flag'                  => 11,
 			'panelLayout'           => 'filter,limit',
 			'paste_button_callback' => array('tl_birthdaymailer', 'pasteConfig'),
-			'icon'                  => 'system/modules/BirthdayMailer/assets/icon.png',
+			'icon'                  => 'system/modules/BirthdayMailer/assets/icon_root.png',
 		),
 		'label' => array
 		(
@@ -71,7 +71,7 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_birthdaymailer']['sendBirthdayMail'],
 				'href'                => 'key=sendBirthdayMail',
-				'attributes'          => 'onclick="Backend.getScrollOffset();" style="background: url(system/modules/BirthdayMailer/assets/sendBirthdayMail.png) no-repeat scroll left center transparent; margin-left: 15px; padding: 2px 0 3px 20px;"'
+				'attributes'          => 'onclick="Backend.getScrollOffset();" style="background: url(\'system/modules/BirthdayMailer/assets/icon_execute.png\') no-repeat scroll left center transparent; margin-left: 15px; padding: 2px 0 3px 20px;"'
 			),
 			'all' => array
 			(
@@ -205,21 +205,27 @@ class tl_birthdaymailer extends Backend
 	 */
 	public function addIcon($row, $label, DataContainer $dc, $args)
 	{
-		 $memberGroupId = $row['memberGroup'];
-		 
-		 // get group from database
-		 $memberGroup = $this->Database->prepare("SELECT * FROM tl_member_group WHERE id=?")
-																	 ->execute($memberGroupId);
 		
-		$image = 'mgroup';
+		$image = 'icon';
 
-		if ($memberGroup->disable || strlen($memberGroup->start) && $memberGroup->start > time() || strlen($memberGroup->stop) && $memberGroup->stop < time())
+		if ($row['disable'])
 		{
-			$image .= '_';
+			$image .= '_1';
+		} 
+
+		// get group from database
+		$objMemberGroup = \MemberGroupModel::findByPk($row['memberGroup']); 
+		
+		$memberGroupImage = 'mgroup';
+		$memberGroupTitle = $GLOBALS['TL_LANG']['tl_birthdaymailer']['group_enabled'];
+
+		if ($objMemberGroup->disable || strlen($objMemberGroup->start) && $objMemberGroup->start > time() || strlen($objMemberGroup->stop) && $objMemberGroup->stop < time())
+		{
+			$memberGroupImage .= '_';
+			$memberGroupTitle = $GLOBALS['TL_LANG']['tl_birthdaymailer']['group_disabled'];
 		}
 
-		return sprintf('<img width="18" height="18" style="margin-left: 0px;" alt="" src="system/themes/%s/images/%s.gif"/> %s', $this->getTheme(), $image, $label);
-		//return sprintf('<div class="list_icon" style="background-image:url(\'system/themes/%s/images/%s.gif\');">%s</div>', $this->getTheme(), $image, $label);
+		return sprintf('<img width="16" height="16" style="margin-left: 0px;" alt="Status icon" src="system/modules/BirthdayMailer/assets/%s.png"/> %s <img src="system/themes/%s/images/%s.gif" alt="%s" title="%s" />', $image, $label, $this->getTheme(), $memberGroupImage, $memberGroupTitle, $memberGroupTitle);
 	}
 	
 	/**

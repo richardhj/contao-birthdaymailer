@@ -56,7 +56,9 @@ $GLOBALS['TL_LANG']['tl_birthdaymailer']['pasteinto']        = array('Am Anfang 
 /**
  * Misc texts
  */
-$GLOBALS['TL_LANG']['tl_birthdaymailer']['root_label'] = 'Geburtstagsmailer Konfigurationen';
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['root_label']     = 'Geburtstagsmailer Konfigurationen';
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['group_enabled']  = 'Aktive Mitgliedergruppe';
+$GLOBALS['TL_LANG']['tl_birthdaymailer']['group_disabled'] = 'Deaktivierte Mitgliedergruppe';
 
 /**
  * Manual execution messages

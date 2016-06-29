@@ -77,17 +77,17 @@ class BirthdayMailer extends \Model
 
 		while ($objResult->next())
 		{
-			// now check via custom hook, if sending should be aborted
+			// !HOOK: now check via custom hook if sending should be aborted
 			$blnAbortSendMail = false;
 
-//			if (isset($GLOBALS['TL_HOOKS']['birthdayMailerAbortSendMail']) && is_array($GLOBALS['TL_HOOKS']['birthdayMailerAbortSendMail']))
-//			{
-//				foreach ($GLOBALS['TL_HOOKS']['birthdayMailerAbortSendMail'] as $callback)
-//				{
-//					$this->import($callback[0]);
-//					$blnAbortSendMail = $this->$callback[0]->$callback[1]($objResult, $blnAbortSendMail);
-//				}
-//			}
+			if (isset($GLOBALS['TL_HOOKS']['birthdayMailerAbortSendMail']) && is_array($GLOBALS['TL_HOOKS']['birthdayMailerAbortSendMail']))
+			{
+				foreach ($GLOBALS['TL_HOOKS']['birthdayMailerAbortSendMail'] as $callback)
+				{
+					$objCallback = \System::importStatic($callback[0]);
+					$blnAbortSendMail = $objCallback->{$callback[1]}($objResult, $blnAbortSendMail);
+				}
+			}
 
 			if ($blnAbortSendMail)
 			{
@@ -143,6 +143,16 @@ class BirthdayMailer extends \Model
 //		$arrTokens['birthdaychild_welcoming_formally']
 //		$arrTokens['birthdaymailer_groupname']
 
+		// !HOOK: alter the notification tokens
+		if (isset($GLOBALS['TL_HOOKS']['birthdayMailerGetNotificationTokens']) && is_array($GLOBALS['TL_HOOKS']['birthdayMailerGetNotificationTokens']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['birthdayMailerGetNotificationTokens'] as $callback)
+			{
+				$objCallback = \System::importStatic($callback[0]);
+				$arrTokens = $objCallback->{$callback[1]}($arrTokens, $objResult);
+			}
+		}
+		
 		if (null !== $objNotification)
 		{
 			$objNotification->send($arrTokens);

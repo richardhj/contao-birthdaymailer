@@ -100,11 +100,11 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 					'field'   => 'disable',
 					'options' => array(
 						array(
-							'value' => '',
+							'value' => '1',
 							'icon'  => 'invisible.gif'
 						),
 						array(
-							'value' => '1',
+							'value' => '',
 							'icon'  => 'visible.gif'
 						)
 					)
@@ -182,7 +182,7 @@ $GLOBALS['TL_DCA']['tl_birthdaymailer'] = array
 				'mandatory'          => true,
 				'unique'             => true,
 				'includeBlankOption' => true,
-				'tl_class'           => 'clr w50',
+				'tl_class'           => 'w50',
 				'chosen'             => true,
 				'submitOnChange'     => true
 			),

@@ -45,17 +45,19 @@ class BirthdayMailer extends \Model
 			'aborted' => array()
 		);
 
-		$time = time();
+        $time = time();
+
+        self::synchronizeDatabaseTimeZone();
 
 		/** @noinspection PhpUndefinedMethodInspection */
 		$objResult = \Database::getInstance()->query(sprintf('
-	SELECT%4$s m.*, mg.name as memberGroupName, %1$s.nc_notification 
+	SELECT%4$s m.*, mg.name as memberGroupName, bm.nc_notification 
 		FROM %2$s m
-		JOIN tl_member_to_group ON tl_member_to_group.member_id=m.id 
-		JOIN %3$s mg ON mg.id=tl_member_to_group.group_id 
-		JOIN %1$s ON %1$s.membergroup=mg.id 
-		WHERE %5$s%6$s%7$s
-		ORDER BY m.id, %1$s.sorting DESC',
+		JOIN tl_member_to_group m2g ON m2g.member_id=m.id 
+		JOIN %3$s mg ON mg.id=m2g.group_id 
+		JOIN %1$s bm ON bm.membergroup=mg.id 
+		WHERE %5$s%6$s%7$s%8$s
+		ORDER BY m.id, bm.sorting DESC',
 				static::getTable(),
 				\MemberModel::getTable(),
 				\MemberGroupModel::getTable(),
@@ -152,7 +154,7 @@ class BirthdayMailer extends \Model
 				$arrTokens = $objCallback->{$callback[1]}($arrTokens, $objResult);
 			}
 		}
-		
+
 		if (null !== $objNotification)
 		{
 			$objNotification->send($arrTokens);
@@ -162,4 +164,22 @@ class BirthdayMailer extends \Model
 
 		return false;
 	}
+
+
+    /**
+     * Synchronize time zone on database
+     * @see https://www.sitepoint.com/synchronize-php-mysql-timezone-configuration/
+     */
+	private static function synchronizeDatabaseTimeZone() {
+        $now = new DateTime();
+
+        $mins = $now->getOffset() / 60;
+        $sgn = ($mins < 0 ? -1 : 1);
+        $mins = abs($mins);
+        $hrs = floor($mins / 60);
+        $mins -= $hrs * 60;
+        $offset = sprintf('%+d:%02d', $hrs*$sgn, $mins);
+
+        \Database::getInstance()->query(sprintf('SET time_zone=\'%s\';', $offset));
+    }
 }

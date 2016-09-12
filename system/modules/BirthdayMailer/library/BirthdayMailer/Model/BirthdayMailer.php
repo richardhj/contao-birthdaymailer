@@ -63,8 +63,10 @@ class BirthdayMailer extends \Model
 				\MemberGroupModel::getTable(),
 				// Select distinct
 				\Config::get('birthdayMailerAllowDuplicates') ? "" : " DISTINCT",
+                // Only active BirthdayMail configurations
+                "bm.disable<>1 ",
 				// Only active members
-				"m.disable<>1 AND (m.start='' OR m.start<$time) AND (m.stop='' OR m.stop>$time) ",
+				"AND m.disable<>1 AND (m.start='' OR m.start<$time) AND (m.stop='' OR m.stop>$time) ",
 				// Only active member groups
 				"AND mg.disable<>1 AND (mg.start='' OR mg.start<$time) AND (mg.stop='' OR mg.stop>$time) ",
 				// Only birthday members if not in developer mode

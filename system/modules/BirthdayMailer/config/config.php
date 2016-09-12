@@ -47,7 +47,7 @@ $GLOBALS['TL_MODELS'][BirthdayMailer\Model\BirthdayMailer::getTable()] = 'Birthd
 /**
  * Cron
  */
-$GLOBALS['TL_CRON']['daily'][] = array('BirthdayMailer\Helper\Cron', 'sendBirthdayMail');
+$GLOBALS['TL_CRON']['daily'][] = array('BirthdayMailer\Helper\Cron', 'sendBirthdayMails');
 
 
 /**
